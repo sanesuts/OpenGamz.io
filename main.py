@@ -7,19 +7,48 @@ from datetime import datetime
 
 def creer_profil():
     """
-    Crée un nouveau profil joueur.
+    Crée un nouveau profil joueur et le sauvegarde en JSON.
 
     Demande à l'utilisateur un nom de joueur, initialise les données
-    du profil (date de création, score, succès, historique des parties)
-    et prépare la sauvegarde du profil.
-
-    Paramètres :
-        Aucun
+    du profil et enregistre le fichier dans data/profils/.
 
     Retour :
         dict : profil joueur créé
     """
-    pass
+    try:
+        nom = input("Entrez le nom du joueur : ").strip()
+
+        if nom == "":
+            print("❌ Le nom ne peut pas être vide.")
+            return None
+
+        # Création du dossier s'il n'existe pas
+        os.makedirs("data/profils", exist_ok=True)
+
+        chemin_fichier = f"data/profils/{nom}.json"
+
+        if os.path.exists(chemin_fichier):
+            print("⚠️ Un profil avec ce nom existe déjà.")
+            return None
+
+        profil = {
+            "nom": nom,
+            "date_creation": datetime.now().strftime("%Y-%m-%d"),
+            "parties": [],
+            "score_total": 0,
+            "succes": []
+        }
+
+        with open(chemin_fichier, "w", encoding="utf-8") as fichier:
+            json.dump(profil, fichier, indent=4, ensure_ascii=False)
+
+        print(f"✅ Profil '{nom}' créé avec succès.")
+        return profil
+
+    except Exception as e:
+        print("⚠️ Erreur lors de la création du profil :", e)
+        return None
+
 
 
 def charger_profil():
