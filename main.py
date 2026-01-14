@@ -115,8 +115,8 @@ def jouer_devinette(profil):
     """
     Lance le jeu 'Devine le nombre'.
 
-    Gère les différents niveaux de difficulté, les essais de l'utilisateur
-    et calcule le score obtenu.
+    L'utilisateur doit deviner un nombre aléatoire selon
+    la difficulté choisie. Le score dépend du nombre d'essais restants.
 
     Paramètres :
         profil (dict) : profil du joueur actuel
@@ -124,7 +124,72 @@ def jouer_devinette(profil):
     Retour :
         int : score gagné
     """
-    pass
+    try:
+        print("\n🎯 DEVINE LE NOMBRE")
+        print("1. Facile (1 - 50)")
+        print("2. Moyen (1 - 100)")
+        print("3. Difficile (1 - 500)")
+
+        choix = input("Choisissez la difficulté : ")
+
+        if choix == "1":
+            max_nb = 50
+            max_try = 10
+            base_score = 50
+        elif choix == "2":
+            max_nb = 100
+            max_try = 7
+            base_score = 100
+        elif choix == "3":
+            max_nb = 500
+            max_try = 5
+            base_score = 200
+        else:
+            print("❌ Choix invalide.")
+            return 0
+
+        secret = random.randint(1, max_nb)
+        left_try = max_try
+
+        while left_try > 0:
+            try:
+                proposal = int(
+                    input(f"Entrez un nombre (1 à {max_nb}) : ")
+                )
+            except ValueError:
+                print("❌ Veuillez entrer un nombre valide.")
+                continue
+
+            if proposal < 1 or proposal > max_nb:
+                print("❌ Nombre hors limites.")
+                continue
+
+            left_try -= 1
+
+            if proposal < secret:
+                print("📉 Trop petit.")
+            elif proposal > secret:
+                print("📈 Trop grand.")
+            else:
+                score = base_score + (left_try * 10)
+                print(f"🎉 Bravo ! Nombre trouvé. +{score} points")
+
+                profil["score_total"] += score
+                profil["parties"].append({
+                    "jeu": "Devine le nombre",
+                    "score": score,
+                    "date": datetime.now().strftime("%Y-%m-%d")
+                })
+
+                return score
+
+        print(f"💀 Perdu ! Le nombre était {secret}.")
+        return 0
+
+    except Exception as e:
+        print("⚠️ Erreur dans le jeu Devine le nombre :", e)
+        return 0
+
 
 
 def jouer_calcul(profil):
