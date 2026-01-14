@@ -155,10 +155,81 @@ def main():
     """
     Fonction principale du programme.
 
-    Organise l'affichage du menu principal et les appels
-    aux différentes fonctionnalités du centre de jeux.
+    Affiche le menu principal du centre de jeux multijoueurs
+    et redirige l'utilisateur vers les fonctionnalités choisies.
     """
-    pass
+    profil_actuel = None
+    choix = ""
+
+    while choix != "7":
+        print("\n=== 🎮 CENTRE DE JEUX MULTIJOUEURS ===")
+        print("1. Créer un profil")
+        print("2. Charger un profil")
+        print("3. Jouer")
+        print("4. Classements")
+        print("5. Succès")
+        print("6. Règles")
+        print("7. Quitter")
+
+        choix = input("Votre choix : ")
+
+        try:
+            if choix == "1":
+                profil_actuel = creer_profil()
+
+            elif choix == "2":
+                profil_actuel = charger_profil()
+
+            elif choix == "3":
+                if profil_actuel is None:
+                    print("⚠️ Aucun profil chargé. Veuillez créer ou charger un profil.")
+                else:
+                    print("\n--- Choix du jeu ---")
+                    print("1. Devine le nombre")
+                    print("2. Calcul mental")
+                    print("3. Pendu")
+
+                    choix_jeu = input("Votre choix : ")
+
+                    if choix_jeu == "1":
+                        score = jouer_devinette(profil_actuel)
+                    elif choix_jeu == "2":
+                        score = jouer_calcul(profil_actuel)
+                    elif choix_jeu == "3":
+                        score = jouer_pendu(profil_actuel)
+                    else:
+                        print("❌ Choix de jeu invalide.")
+                        continue
+
+                    verifier_succes(profil_actuel)
+                    sauvegarder_donnees(profil_actuel)
+
+            elif choix == "4":
+                afficher_classements()
+
+            elif choix == "5":
+                if profil_actuel is None:
+                    print("⚠️ Aucun profil chargé.")
+                else:
+                    print("\n🏆 Succès débloqués :")
+                    for succes in profil_actuel.get("succes", []):
+                        print(f"- {succes}")
+
+            elif choix == "6":
+                print("\n📜 RÈGLES DU JEU")
+                print("- Choisissez un jeu depuis le menu")
+                print("- Gagnez des points selon vos performances")
+                print("- Débloquez des succès automatiquement")
+
+            elif choix == "7":
+                print("👋 Merci d'avoir joué. À bientôt !")
+
+            else:
+                print("❌ Choix invalide. Veuillez entrer un nombre entre 1 et 7.")
+
+        except Exception as e:
+            print("⚠️ Une erreur est survenue :", e)
+
 
 
 if __name__ == "__main__":
