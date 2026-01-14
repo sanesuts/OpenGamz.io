@@ -58,13 +58,57 @@ def charger_profil():
     Affiche la liste des profils disponibles et permet à l'utilisateur
     d'en sélectionner un.
 
-    Paramètres :
-        Aucun
-
     Retour :
         dict : profil joueur chargé
     """
-    pass
+    try:
+        dossier_profils = "data/profils"
+
+        if not os.path.exists(dossier_profils):
+            print("⚠️ Aucun profil existant.")
+            return None
+
+        fichiers = [
+            f for f in os.listdir(dossier_profils)
+            if f.endswith(".json")
+        ]
+
+        if not fichiers:
+            print("⚠️ Aucun profil trouvé.")
+            return None
+
+        print("\n👤 Profils disponibles :")
+        for index, fichier in enumerate(fichiers, start=1):
+            print(f"{index}. {fichier.replace('.json', '')}")
+
+        choix = input("Choisissez un profil (numéro) : ")
+
+        if not choix.isdigit():
+            print("❌ Veuillez entrer un numéro valide.")
+            return None
+
+        choix = int(choix)
+
+        if choix < 1 or choix > len(fichiers):
+            print("❌ Choix hors limites.")
+            return None
+
+        chemin_fichier = os.path.join(dossier_profils, fichiers[choix - 1])
+
+        with open(chemin_fichier, "r", encoding="utf-8") as fichier:
+            profil = json.load(fichier)
+
+        print(f"✅ Profil '{profil['nom']}' chargé avec succès.")
+        return profil
+
+    except json.JSONDecodeError:
+        print("❌ Erreur : fichier de profil corrompu.")
+        return None
+
+    except Exception as e:
+        print("⚠️ Erreur lors du chargement du profil :", e)
+        return None
+
 
 
 def jouer_devinette(profil):
