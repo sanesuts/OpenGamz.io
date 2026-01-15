@@ -11,8 +11,34 @@
             "game": "Devine le nombre",
             "score": 90,
             "date": "2026-01-15"
+        },
+        {
+            "game": "Devine le nombre",
+            "score": 90,
+            "date": "2026-01-15"
+        },
+        {
+            "game": "Devine le nombre",
+            "score": 90,
+            "date": "2026-01-15"
+        },
+        {
+            "game": "Devine le nombre",
+            "score": 90,
+            "date": "2026-01-15"
+        },
+        {
+            "game": "Devine le nombre",
+            "score": 110,
+            "date": "2026-01-15"
         }
     ],
-    "total_score": 180,
-    "succes": []
+    "total_score": 560,
+    "succes": [
+        "Premier jeu",
+        "Joueur assidu (5 parties)",
+        "Scoreur (100 points)",
+        "Champion (500 points)",
+        "Spécialiste Devine le nombre (5 parties)"
+    ]
 }

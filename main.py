@@ -296,7 +296,66 @@ def verifier_succes(profil):
     Retour :
         None
     """
-    pass
+    try:
+        if profil is None:
+            return
+
+        profil.setdefault("succes", [])
+        succes_list = profil["succes"]
+
+        parties = profil.get("parties", [])
+        total_score = profil.get("total_score", 0)
+        nb_parties = len(parties)
+
+        counts = {}
+        for p in parties:
+            game = p.get("game", "Inconnu")
+            counts[game] = counts.get(game, 0) + 1
+
+        new = []
+
+        thresholds_parties = [
+            (1, "Premier jeu"),
+            (5, "Joueur assidu (5 parties)"),
+            (20, "Vétéran (20 parties)"),
+            (50, "Marathonien (50 parties)"),
+            (100, "Légende vivante (100 parties)")
+        ]
+
+        for threshold, name in thresholds_parties:
+            if nb_parties >= threshold and name not in succes_list:
+                succes_list.append(name)
+                new.append(name)
+
+        threshold_score = [
+            (100, "Scoreur (100 points)"),
+            (500, "Champion (500 points)"),
+            (1000, "Maître du jeu (1000 points)"),
+            (5000, "Légende (5000 points)")
+        ]
+        for threshold, name in threshold_score:
+            if total_score >= threshold and name not in succes_list:
+                succes_list.append(name)
+                new.append(name)
+
+        target_games = [
+            ("Devine le nombre", 5, "Spécialiste Devine le nombre (5 parties)"),
+            ("Calcul mental", 5, "Calculateur (5 parties)"),
+            ("Pendu", 5, "Pendu expert (5 parties)")
+        ]
+
+        for game, threshold, name in target_games:
+            if counts.get(game, 0) >= threshold and name not in succes_list:
+                succes_list.append(name)
+                new.append(name)
+
+        if new:
+            print("\n🏅 Nouveaux succès débloqués :")
+            for s in new:
+                print(f"- {s}")
+
+    except Exception as e:
+        print("⚠️ Erreur lors de la vérification des succès :", e)
 
 
 def afficher_classements():
