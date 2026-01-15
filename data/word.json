@@ -1,0 +1,50 @@
+{
+  "informatique": [
+    "ordinateur","clavier","souris","écran","processeur","mémoire","stockage","disque","réseau","serveur",
+    "cloud","logiciel","application","base_de_donnees","algorithme","variable","fonction","boucle","condition","debug",
+    "compilation","terminal","commande","pare_feu","sécurité","cryptographie","protocole","api","interface","framework",
+    "librairie","package","virtualisation","conteneur","docker","kubernetes","python","javascript","java","csharp",
+    "ruby","php","sql","html","css","xml","json","git","branche","commit",
+    "merge","deploy","test","automate","cron","kernel","pilote","firmware","bios","cache"
+  ],
+  "animaux": [
+    "chien","chat","cheval","vache","cochon","mouton","chèvre","lapin","souris","rat",
+    "hamster","cobaye","oiseau","pigeon","canard","oie","poule","coq","dinde","canari",
+    "perroquet","faucon","hibou","aigle","renard","loup","ours","lynx","tigre","lion",
+    "léopard","jaguar","guépard","éléphant","rhinocéros","hippopotame","girafe","zèbre","kangourou","koala",
+    "panda","singe","gorille","chimpanzé","dauphin","requin","poisson","baleine","tortue","serpent",
+    "lézard","caméléon","grenouille","crapaud","mante_religieuse","abeille","papillon","sauterelle","fourmi","escargot"
+  ],
+  "nourriture": [
+    "pain","fromage","lait","beurre","oeuf","jambon","poulet","boeuf","porc","poisson",
+    "riz","pâtes","pommes_de_terre","salade","tomate","concombre","carotte","oignon","ail","champignon",
+    "avocat","poivron","aubergine","courgette","épinards","brocoli","haricot","lentille","pois","gâteau",
+    "biscuit","chocolat","glace","yaourt","miel","confiture","sucre","sel","poivre","huile",
+    "vinaigre","soupe","pizza","hamburger","sandwich","crêpe","pancake","croissant","baguette","sushis",
+    "curry","tacos","tortilla","paella","couscous","quinoa","smoothie","salade_de_fruits","compote","nouille"
+  ],
+  "sports": [
+    "football","basket","tennis","rugby","handball","volley","natation","athlétisme","cyclisme","vtt",
+    "skateboard","surf","ski","snowboard","escalade","boxe","judo","karaté","taekwondo","escrime",
+    "golf","hockey","baseball","cricket","ping_pong","badminton","triathlon","décathlon","aviron","voile",
+    "plongée","polo","waterpolo","gymnastique","danse","fitness","crossfit","arts_martiaux","randonnée","trail",
+    "course","marathon","saut_en_longueur","saut_en_hauteur","lancer_de_poids","lancer_du_javelot","pentathlon","ski_de_fond","biathlon","motocross",
+    "rallye","formule_1","karting","escalade_sportive","bmx","parkour","ultimate","quidditch","curling","yachting"
+  ],
+  "voyage": [
+    "avion","aeroport","billet","passeport","visa","hotel","auberge","chambre","reservation","carte",
+    "guide","valise","sac_a_dos","randonnee","camping","plage","montagne","train","gare","metro",
+    "bus","taxi","location","voyage_organise","excursion","croisiere","ferry","port","itineraire","douane",
+    "voyageur","tourisme","souvenir","carte_postale","photographie","culture","gastronomie","langue","monnaie","change",
+    "assurance","securite_voyage","sommet","vallee","site_touristique","musee","monument","guide_local","excursion_journaliere","sejour",
+    "escapade","road_trip","vol_direct","vol_escale","terminal","embarquement","depaysement","plage_privee","panorama","detente"
+  ],
+  "metiers": [
+    "développeur","ingénieur","médecin","infirmier","enseignant","avocat","juge","policier","pompier","architecte",
+    "dentiste","pharmacien","cuisinier","serveur","boulanger","pâtissier","agriculteur","électricien","plombier","menuisier",
+    "serrurier","mécanicien","chauffeur","pilote","hotesse","steward","journaliste","photographe","designer","graphiste",
+    "traducteur","interprete","comptable","banquier","commercant","vendeur","agent_immobilier","consultant","chercheur","scientifique",
+    "technicien","informaticien","data_scientist","analyste","gestionnaire","directeur","pdg","secretaire","assistant","receptionniste",
+    "bibliothecaire","archiviste","conservateur","musicien","acteur","réalisateur","chanteur","danseur","styliste","coiffeur"
+  ]
+}
