@@ -312,7 +312,42 @@ def afficher_classements():
     Retour :
         None
     """
-    pass
+    rankings_path = "data/classements.json"
+
+    try:
+        if not os.path.exists(rankings_path):
+            print("📭 Aucun classement disponible.")
+            return
+
+        with open(rankings_path, "r", encoding="utf-8") as file:
+            try:
+                rankings = json.load(file)
+            except json.JSONDecodeError:
+                print("⚠️ Fichier de classement corrompu.")
+                return
+
+        players = rankings.get("players", {})
+
+        if not players:
+            print("📭 Aucun joueur enregistré dans le classement.")
+            return
+
+        # Tri des joueurs par score décroissant
+        sorting_ranking = sorted(
+            players.items(),
+            key=lambda item: item[1],
+            reverse=True
+        )
+
+        print("\n🏆 CLASSEMENT GLOBAL 🏆")
+        print("-" * 30)
+        for rank, (name, score) in enumerate(sorting_ranking, start=1):
+            print(f"{rank}. {name} — {score} points")
+
+        print("-" * 30)
+    except Exception as e:
+        print("⚠️ Erreur lors de l'affichage du classement :", e)
+
 
 
 def sauvegarder_donnees(profil):
