@@ -31,9 +31,14 @@
             "game": "Devine le nombre",
             "score": 110,
             "date": "2026-01-15"
+        },
+        {
+            "game": "Calcul mental",
+            "score": 50,
+            "date": "2026-01-15"
         }
     ],
-    "total_score": 560,
+    "total_score": 610,
     "succes": [
         "Premier jeu",
         "Joueur assidu (5 parties)",

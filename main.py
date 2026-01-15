@@ -214,7 +214,76 @@ def jouer_calcul(profil):
     Retour :
         int : score gagné
     """
-    pass
+    try:
+        if profil is None:
+            print("⚠️ Aucun profil actif.")
+            return 0
+
+        print("\n🧠 CALCUL MENTAL — 30 secondes")
+        time_limit = 30
+        correct_answers = 0
+        start_time = time.time()
+
+        while True:
+            elapsed = time.time() - start_time
+            remaining = int(time_limit - elapsed)
+            if remaining <= 0:
+                print("\n⏱️ Temps écoulé !")
+                break
+
+            print(f"\nTemps restant : {remaining} s")
+            op = random.choice(["+", "-", "*"])
+
+            if op == "+":
+                a = random.randint(1, 100)
+                b = random.randint(1, 100)
+                solution = a + b
+            elif op == "-":
+                a = random.randint(1, 100)
+                b = random.randint(1, a)
+                solution = a - b
+            else:  # "*"
+                a = random.randint(1, 12)
+                b = random.randint(1, 12)
+                solution = a * b
+
+            try:
+                answer = input(f"Calcule : {a} {op} {b} = ").strip()
+                # vérifier si le temps est écoulé après la saisie
+                if time.time() - start_time > time_limit:
+                    print("\n⏱️ Temps écoulé pendant la réponse.")
+                    break
+
+                reponse_int = int(answer)
+                if reponse_int == solution:
+                    print("✅ Correct")
+                    correct_answers += 1
+                else:
+                    print(f"❌ Incorrect. Réponse : {solution}")
+
+            except ValueError:
+                print("❌ Entrée invalide. Veuillez entrer un nombre.")
+                if time.time() - start_time > time_limit:
+                    print("\n⏱️ Temps écoulé !")
+                    break
+                continue
+
+        points = calculer_points("Calcul mental", {"correct_answers": correct_answers})
+        print(f"\n🎯 Résultat : {correct_answers} bonnes réponses — +{points} points")
+
+        # mise à jour du profil
+        profil["total_score"] = profil.get("total_score", 0) + points
+        profil.setdefault("parties", []).append({
+            "game": "Calcul mental",
+            "score": points,
+            "date": datetime.now().strftime("%Y-%m-%d")
+        })
+
+        return points
+
+    except Exception as e:
+        print("⚠️ Erreur dans le jeu Calcul mental :", e)
+        return 0
 
 
 def jouer_pendu(profil):
