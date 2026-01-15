@@ -32,10 +32,10 @@ def creer_profil():
             return None
 
         profil = {
-            "nom": nom,
-            "date_creation": datetime.now().strftime("%Y-%m-%d"),
+            "name": nom,
+            "creation_date": datetime.now().strftime("%Y-%m-%d"),
             "parties": [],
-            "score_total": 0,
+            "total_score": 0,
             "succes": []
         }
 
@@ -98,7 +98,7 @@ def charger_profil():
         with open(chemin_fichier, "r", encoding="utf-8") as fichier:
             profil = json.load(fichier)
 
-        print(f"✅ Profil '{profil['nom']}' chargé avec succès.")
+        print(f"✅ Profil '{profil['name']}' chargé avec succès.")
         return profil
 
     except json.JSONDecodeError:
@@ -183,9 +183,9 @@ def jouer_devinette(profil):
                 score = calculer_points("Devine le nombre", performance)
                 print(f"🎉 Bravo ! Nombre trouvé. +{score} points")
 
-                profil["score_total"] += score
+                profil["total_score"] += score
                 profil["parties"].append({
-                    "jeu": "Devine le nombre",
+                    "game": "Devine le nombre",
                     "score": score,
                     "date": datetime.now().strftime("%Y-%m-%d")
                 })
@@ -334,7 +334,7 @@ def sauvegarder_donnees(profil):
 
         os.makedirs("data/profils", exist_ok=True)
 
-        profil_path = f"data/profils/{profil['nom']}.json"
+        profil_path = f"data/profils/{profil['name']}.json"
         with open(profil_path, "w", encoding="utf-8") as file:
             json.dump(profil, file, indent=4, ensure_ascii=False)
 
