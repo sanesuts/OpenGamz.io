@@ -130,20 +130,23 @@ def jouer_devinette(profil):
         print("2. Moyen (1 - 100)")
         print("3. Difficile (1 - 500)")
 
-        choix = input("Choisissez la difficulté : ")
+        difficulty = input("Choisissez la difficulté : ")
 
-        if choix == "1":
+        if difficulty == "1":
             max_nb = 50
             max_try = 10
             base_score = 50
-        elif choix == "2":
+            selected_difficulty = "easy"
+        elif difficulty == "2":
             max_nb = 100
             max_try = 7
             base_score = 100
-        elif choix == "3":
+            selected_difficulty = "average"
+        elif difficulty == "3":
             max_nb = 500
             max_try = 5
             base_score = 200
+            selected_difficulty = "hard"
         else:
             print("❌ Choix invalide.")
             return 0
@@ -171,7 +174,13 @@ def jouer_devinette(profil):
             elif proposal > secret:
                 print("📈 Trop grand.")
             else:
-                score = base_score + (left_try * 10)
+
+                performance = {
+                    "difficulty": selected_difficulty,
+                    "left_try": left_try
+                }
+                
+                score = calculer_points("Devine le nombre", performance)
                 print(f"🎉 Bravo ! Nombre trouvé. +{score} points")
 
                 profil["score_total"] += score
@@ -224,7 +233,7 @@ def jouer_pendu(profil):
     pass
 
 
-def calculer_points(jeu, performance):
+def calculer_points(game, performance):
     """
     Calcule le nombre de points gagnés selon le jeu et la performance.
 
@@ -232,13 +241,46 @@ def calculer_points(jeu, performance):
     la duplication de code.
 
     Paramètres :
-        jeu (str) : nom du jeu
+        game (str) : nom du jeu
         performance (dict) : données de performance du joueur
 
     Retour :
         int : nombre de points calculés
     """
-    pass
+
+    points = 0
+
+    try:
+        if game == "Devine le nombre":
+            difficulty = performance.get("difficulty")
+
+            match difficulty:
+                case "easy":
+                    points = 50
+                case "average":
+                    points = 100
+                case "hard":
+                    points = 200
+
+            left_try = performance.get("left_try", 0)
+            points += left_try * 10
+
+        elif game == "Calcul mental":
+            correct_answers = performance.get("correct_answers", 0)
+            points = correct_answers * 10
+
+        elif game == "Pendu":
+            remaining_errors = performance.get("remaining_errors", 0)
+            points = remaining_errors * 25
+
+        else:
+            points = 0
+
+        return points
+
+    except Exception as e:
+        print("⚠️ Erreur lors du calcul des points :", e)
+        return 0
 
 
 def verifier_succes(profil):
