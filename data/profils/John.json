@@ -36,9 +36,19 @@
             "game": "Calcul mental",
             "score": 50,
             "date": "2026-01-15"
+        },
+        {
+            "game": "Pendu",
+            "score": 100,
+            "date": "2026-01-15"
+        },
+        {
+            "game": "Pendu",
+            "score": 50,
+            "date": "2026-01-15"
         }
     ],
-    "total_score": 610,
+    "total_score": 760,
     "succes": [
         "Premier jeu",
         "Joueur assidu (5 parties)",

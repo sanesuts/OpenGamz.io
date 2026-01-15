@@ -4,7 +4,6 @@ import json
 import os
 from datetime import datetime
 
-
 def creer_profil():
     """
     Crée un nouveau profil joueur et le sauvegarde en JSON.
@@ -48,8 +47,6 @@ def creer_profil():
     except Exception as e:
         print("⚠️ Erreur lors de la création du profil :", e)
         return None
-
-
 
 def charger_profil():
     """
@@ -108,8 +105,6 @@ def charger_profil():
     except Exception as e:
         print("⚠️ Erreur lors du chargement du profil :", e)
         return None
-
-
 
 def jouer_devinette(profil):
     """
@@ -199,8 +194,6 @@ def jouer_devinette(profil):
         print("⚠️ Erreur dans le jeu Devine le nombre :", e)
         return 0
 
-
-
 def jouer_calcul(profil):
     """
     Lance le jeu de calcul mental.
@@ -281,12 +274,95 @@ def jouer_calcul(profil):
         print("⚠️ Erreur dans le jeu Calcul mental :", e)
         return 0
 
+def charger_mots():
+    """
+    Charge un mot aléatoire depuis data/word.json en gérant les thèmes.
+
+    Retour :
+        str : un mot (fallback aléatoire si erreur)
+    """
+    path = "data/word.json"
+    fallback = [
+        "ordinateur", "python", "developpeur", "framework", "algorithm",
+        "memoire", "reseau", "securite", "interface", "fonction"
+    ]
+
+    try:
+        if not os.path.exists(path):
+            print(f"⚠️ Fichier {path} introuvable. Renvoi d'un mot par défaut.")
+            return random.choice(fallback)
+
+        with open(path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+
+        if not isinstance(data, dict) or not data:
+            print(f"⚠️ Contenu de {path} invalide (attendu dict non vide). Renvoi d'un mot par défaut.")
+            return random.choice(fallback)
+
+        # Construire dictionnaire thème -> liste de mots nettoyés
+        clean_data = {}
+        for theme, lst in data.items():
+            if isinstance(lst, list):
+                mots = [w.strip() for w in lst if isinstance(w, str) and w.strip()]
+                if mots:
+                    clean_data[theme] = mots
+
+        if not clean_data:
+            print("⚠️ Aucun mot valide trouvé dans les thèmes. Renvoi d'un mot par défaut.")
+            return random.choice(fallback)
+
+        themes = sorted(clean_data.keys())
+
+        # Affichage menu thèmes
+        print("\n🔤 Thèmes disponibles :")
+        for i, t in enumerate(themes, start=1):
+            print(f"{i}. {t} ({len(clean_data.get(t, []))} mots)")
+        print("0. Aléatoire parmi tous les thèmes")
+
+        choice = input("Choisissez un thème (numéro ou nom, 0 pour aléatoire) : ").strip()
+
+        # Cas aléatoire / aucun choix
+        if choice == "" or choice == "0":
+            all_words = [w for lst in clean_data.values() for w in lst]
+            return random.choice(all_words) if all_words else random.choice(fallback)
+
+        # Si choix numérique -> index
+        if choice.isdigit():
+            idx = int(choice) - 1
+            if 0 <= idx < len(themes):
+                selected = themes[idx]
+                mots = clean_data.get(selected, [])
+                return random.choice(mots) if mots else random.choice(fallback)
+            else:
+                print("❌ Choix hors limites, mot aléatoire sélectionné.")
+                all_words = [w for lst in clean_data.values() for w in lst]
+                return random.choice(all_words) if all_words else random.choice(fallback)
+
+        # Sinon, tentative de correspondance sur nom de thème (insensible à la casse)
+        lowered_map = {t.lower(): t for t in themes}
+        if choice.lower() in lowered_map:
+            selected = lowered_map[choice.lower()]
+            mots = clean_data.get(selected, [])
+            return random.choice(mots) if mots else random.choice(fallback)
+
+        # Choix invalide
+        print("❌ Choix invalide, mot aléatoire sélectionné.")
+        all_words = [w for lst in clean_data.values() for w in lst]
+        return random.choice(all_words) if all_words else random.choice(fallback)
+
+    except json.JSONDecodeError:
+        print(f"❌ Erreur JSON dans {path}. Renvoi d'un mot par défaut.")
+        return random.choice(fallback)
+    except Exception as e:
+        print("⚠️ Erreur lors du chargement des mots :", e)
+        return random.choice(fallback)
+
 
 def jouer_pendu(profil):
     """
     Lance le jeu du pendu.
 
-    Sélectionne un mot aléatoire, affiche le pendu en ASCII,
+    Sélectionne un mot aléatoire (via charger_mots), affiche le pendu en ASCII,
     gère les lettres proposées et calcule le score final.
 
     Paramètres :
@@ -296,12 +372,16 @@ def jouer_pendu(profil):
         int : score gagné
     """
     try:
-        words = [
-            "ordinateur", "python", "developpeur", "framework", "algorithm",
-            "mémoire", "réseau", "sécurité", "interface", "fonction"
-        ]
+        if profil is None:
+            print("⚠️ Aucun profil actif.")
+            return 0
 
-        secret_word = random.choice(words).lower()
+        mot_choisi = charger_mots()  # retourne un seul mot (string)
+        if not mot_choisi:
+            print("⚠️ Aucune liste de mots disponible.")
+            return 0
+
+        secret_word = mot_choisi.lower()
         secret_letters = set([c for c in secret_word if c.isalpha()])
         letters_found = set()
         proposed_letters = set()
@@ -311,15 +391,14 @@ def jouer_pendu(profil):
 
         ascii_pendu = [
             """
-            
-            
-            
-            
-            
+
+
+
+
             =========
             """,
             """
-            
+
             |
             |
             |
@@ -368,7 +447,7 @@ def jouer_pendu(profil):
             """
         ]
 
-        print ("\n🪤 PENDU — Trouvez le mot !")
+        print("\n🪤 PENDU — Trouvez le mot !")
 
         while errors < max_errors and not secret_letters.issubset(letters_found):
             hidden_word = " ".join([c if (not c.isalpha()) or (c in letters_found) else "_" for c in secret_word])
@@ -395,6 +474,7 @@ def jouer_pendu(profil):
             letter = proposal[0]
             if not letter.isalpha():
                 print("❌ Veuillez entrer une lettre valide.")
+                continue
 
             if letter in proposed_letters:
                 print("⚠️ Lettre déjà proposée.")
@@ -411,12 +491,7 @@ def jouer_pendu(profil):
 
         if secret_letters.issubset(letters_found):
             remaining_errors = max_errors - errors
-
-            performance = {
-                "remaining_errors": remaining_errors
-            }
-
-            points = calculer_points("Pendu", performance)
+            points = calculer_points("Pendu", {"remaining_errors": remaining_errors})
             print(f"\n🏆 Mot trouvé : {secret_word} — +{points} points (erreurs restantes : {remaining_errors})")
 
             profil["total_score"] = profil.get("total_score", 0) + points
@@ -430,7 +505,6 @@ def jouer_pendu(profil):
         else:
             print(ascii_pendu[min(errors, len(ascii_pendu)-1)])
             print(f"\n💀 Perdu ! Le mot était : {secret_word}")
-            # ajouter une partie perdue avec score 0
             profil.setdefault("parties", []).append({
                 "game": "Pendu",
                 "score": 0,
@@ -489,7 +563,6 @@ def calculer_points(game, performance):
     except Exception as e:
         print("⚠️ Erreur lors du calcul des points :", e)
         return 0
-
 
 def verifier_succes(profil):
     """
@@ -565,7 +638,6 @@ def verifier_succes(profil):
     except Exception as e:
         print("⚠️ Erreur lors de la vérification des succès :", e)
 
-
 def afficher_classements():
     """
     Affiche les classements du centre de jeux.
@@ -615,8 +687,6 @@ def afficher_classements():
     except Exception as e:
         print("⚠️ Erreur lors de l'affichage du classement :", e)
 
-
-
 def sauvegarder_donnees(profil):
     """
     Sauvegarde les données du profil joueur et met à jour les classements.
@@ -663,7 +733,6 @@ def sauvegarder_donnees(profil):
     except Exception as e:
         print("⚠️ Erreur lors de la sauvegarde des données :", e)
 
-
 def main():
     """
     Fonction principale du programme.
@@ -672,9 +741,9 @@ def main():
     et redirige l'utilisateur vers les fonctionnalités choisies.
     """
     profil_actuel = None
-    choix = ""
+    choice = ""
 
-    while choix != "7":
+    while choice != "7":
         print("\n=== 🎮 CENTRE DE JEUX MULTIJOUEURS ===")
         print("1. Créer un profil")
         print("2. Charger un profil")
@@ -684,16 +753,16 @@ def main():
         print("6. Règles")
         print("7. Quitter")
 
-        choix = input("Votre choix : ")
+        choice = input("Votre choix : ")
 
         try:
-            if choix == "1":
+            if choice == "1":
                 profil_actuel = creer_profil()
 
-            elif choix == "2":
+            elif choice == "2":
                 profil_actuel = charger_profil()
 
-            elif choix == "3":
+            elif choice == "3":
                 if profil_actuel is None:
                     print("⚠️ Aucun profil chargé. Veuillez créer ou charger un profil.")
                 else:
@@ -702,13 +771,13 @@ def main():
                     print("2. Calcul mental")
                     print("3. Pendu")
 
-                    choix_jeu = input("Votre choix : ")
+                    choice_jeu = input("Votre choix : ")
 
-                    if choix_jeu == "1":
+                    if choice_jeu == "1":
                         score = jouer_devinette(profil_actuel)
-                    elif choix_jeu == "2":
+                    elif choice_jeu == "2":
                         score = jouer_calcul(profil_actuel)
-                    elif choix_jeu == "3":
+                    elif choice_jeu == "3":
                         score = jouer_pendu(profil_actuel)
                     else:
                         print("❌ Choix de jeu invalide.")
@@ -717,10 +786,10 @@ def main():
                     verifier_succes(profil_actuel)
                     sauvegarder_donnees(profil_actuel)
 
-            elif choix == "4":
+            elif choice == "4":
                 afficher_classements()
 
-            elif choix == "5":
+            elif choice == "5":
                 if profil_actuel is None:
                     print("⚠️ Aucun profil chargé.")
                 else:
@@ -728,13 +797,13 @@ def main():
                     for succes in profil_actuel.get("succes", []):
                         print(f"- {succes}")
 
-            elif choix == "6":
+            elif choice == "6":
                 print("\n📜 RÈGLES DU JEU")
                 print("- Choisissez un jeu depuis le menu")
                 print("- Gagnez des points selon vos performances")
                 print("- Débloquez des succès automatiquement")
 
-            elif choix == "7":
+            elif choice == "7":
                 print("👋 Merci d'avoir joué. À bientôt !")
 
             else:
@@ -742,8 +811,6 @@ def main():
 
         except Exception as e:
             print("⚠️ Une erreur est survenue :", e)
-
-
 
 if __name__ == "__main__":
     main()
