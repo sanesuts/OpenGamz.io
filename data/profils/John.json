@@ -1,7 +1,13 @@
 {
     "nom": "John",
     "date_creation": "2026-01-14",
-    "parties": [],
-    "score_total": 0,
+    "parties": [
+        {
+            "jeu": "Devine le nombre",
+            "score": 90,
+            "date": "2026-01-15"
+        }
+    ],
+    "score_total": 90,
     "succes": []
 }
