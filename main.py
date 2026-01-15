@@ -215,10 +215,6 @@ def jouer_calcul(profil):
         int : score gagné
     """
     try:
-        if profil is None:
-            print("⚠️ Aucun profil actif.")
-            return 0
-
         print("\n🧠 CALCUL MENTAL — 30 secondes")
         time_limit = 30
         correct_answers = 0
@@ -299,17 +295,160 @@ def jouer_pendu(profil):
     Retour :
         int : score gagné
     """
-    pass
+    try:
+        words = [
+            "ordinateur", "python", "developpeur", "framework", "algorithm",
+            "mémoire", "réseau", "sécurité", "interface", "fonction"
+        ]
 
+        secret_word = random.choice(words).lower()
+        secret_letters = set([c for c in secret_word if c.isalpha()])
+        letters_found = set()
+        proposed_letters = set()
+
+        max_errors = 6
+        errors = 0
+
+        ascii_pendu = [
+            """
+            
+            
+            
+            
+            
+            =========
+            """,
+            """
+            
+            |
+            |
+            |
+            |
+            =========
+            """,
+            """
+            +---+
+            |
+            |
+            |
+            |
+            =========
+            """,
+            """
+            +---+
+            |   O
+            |
+            |
+            |
+            =========
+            """,
+            """
+            +---+
+            |   O
+            |   |
+            |
+            |
+            =========
+            """,
+            """
+            +---+
+            |   O
+            |  /|\\
+            |
+            |
+            =========
+            """,
+            """
+            +---+
+            |   O
+            |  /|\\
+            |  / \\
+            |
+            =========
+            """
+        ]
+
+        print ("\n🪤 PENDU — Trouvez le mot !")
+
+        while errors < max_errors and not secret_letters.issubset(letters_found):
+            hidden_word = " ".join([c if (not c.isalpha()) or (c in letters_found) else "_" for c in secret_word])
+            print(f"\nMot : {hidden_word}")
+            print(ascii_pendu[min(errors, len(ascii_pendu) - 1)])
+            print(f"Lettres proposées : {', '.join(sorted(proposed_letters))}" if proposed_letters else "Lettres proposées : (aucune)")
+            print(f"Erreurs : {errors} / {max_errors}")
+
+            proposal = input("Proposez une lettre (ou le mot entier): ").strip().lower()
+            if not proposal:
+                print("❌ Entrée vide.")
+                continue
+
+            if len(proposal) > 1:
+                if proposal == secret_word:
+                    letters_found.update(secret_letters)
+                    print(f"🎉 Bravo ! Vous avez trouvé le mot '{secret_word}'.")
+                    break
+                else:
+                    errors += 1
+                    print(f"❌ Mauvaise réponse. Tentative mot incorrecte. ({errors}/{max_errors})")
+                    continue
+
+            letter = proposal[0]
+            if not letter.isalpha():
+                print("❌ Veuillez entrer une lettre valide.")
+
+            if letter in proposed_letters:
+                print("⚠️ Lettre déjà proposée.")
+                continue
+
+            proposed_letters.add(letter)
+
+            if letter in secret_letters:
+                letters_found.add(letter)
+                print("✅ Lettre correcte !")
+            else:
+                errors += 1
+                print(f"❌ Lettre incorrecte. ({errors}/{max_errors})")
+
+        if secret_letters.issubset(letters_found):
+            remaining_errors = max_errors - errors
+
+            performance = {
+                "remaining_errors": remaining_errors
+            }
+
+            points = calculer_points("Pendu", performance)
+            print(f"\n🏆 Mot trouvé : {secret_word} — +{points} points (erreurs restantes : {remaining_errors})")
+
+            profil["total_score"] = profil.get("total_score", 0) + points
+            profil.setdefault("parties", []).append({
+                "game": "Pendu",
+                "score": points,
+                "date": datetime.now().strftime("%Y-%m-%d")
+            })
+
+            return points
+        else:
+            print(ascii_pendu[min(errors, len(ascii_pendu)-1)])
+            print(f"\n💀 Perdu ! Le mot était : {secret_word}")
+            # ajouter une partie perdue avec score 0
+            profil.setdefault("parties", []).append({
+                "game": "Pendu",
+                "score": 0,
+                "date": datetime.now().strftime("%Y-%m-%d")
+            })
+            return 0
+    except Exception as e:
+        print("⚠️ Erreur dans le jeu Pendu :", e)
+        return 0
 
 def calculer_points(game, performance):
     """
-    Calcule le nombre de points gagnés selon le jeu et la performance.
+    oints gagnés selon le jeu et la performance.
 
     Centralise la logique de calcul des scores pour éviter
     la duplication de code.
 
-    Paramètres :
+    ParaCalcule le nombre de pmètres :
         game (str) : nom du jeu
         performance (dict) : données de performance du joueur
 
