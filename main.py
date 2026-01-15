@@ -328,7 +328,38 @@ def sauvegarder_donnees(profil):
     Retour :
         None
     """
-    pass
+    try:
+        if profil is None:
+            return
+
+        os.makedirs("data/profils", exist_ok=True)
+
+        profil_path = f"data/profils/{profil['nom']}.json"
+        with open(profil_path, "w", encoding="utf-8") as file:
+            json.dump(profil, file, indent=4, ensure_ascii=False)
+
+        rankings_path = "data/classements.json"
+
+        if os.path.exists(rankings_path):
+            with open(rankings_path, "r", encoding="utf-8") as file:
+                try:
+                    rankings = json.load(file)
+                except json.JSONDecodeError:
+                    rankings = {"players": {}}
+        else:
+            rankings = {"players": {}}
+
+
+        rankings["players"][profil["name"]] = profil["total_score"]
+
+        with open(rankings_path, "w", encoding="utf-8") as file:
+            json.dump(rankings, file, indent=4, ensure_ascii=False)
+
+        print("💾 Données sauvegardées avec succès.")
+
+
+    except Exception as e:
+        print("⚠️ Erreur lors de la sauvegarde des données :", e)
 
 
 def main():
