@@ -46,14 +46,45 @@
             "game": "Pendu",
             "score": 50,
             "date": "2026-01-15"
+        },
+        {
+            "game": "Devine le nombre",
+            "score": 70,
+            "date": "2026-01-15"
+        },
+        {
+            "game": "Devine le nombre",
+            "score": 100,
+            "date": "2026-01-15"
+        },
+        {
+            "game": "Pendu",
+            "score": 0,
+            "date": "2026-01-15"
+        },
+        {
+            "game": "Pierre-Feuille-Ciseaux (15)",
+            "score": 20,
+            "date": "2026-01-19"
+        },
+        {
+            "game": "Pierre-Feuille-Ciseaux (15)",
+            "score": 40,
+            "date": "2026-01-19"
+        },
+        {
+            "game": "Devine le nombre",
+            "score": 110,
+            "date": "2026-01-19"
         }
     ],
-    "total_score": 760,
+    "total_score": 1100,
     "succes": [
         "Premier jeu",
         "Joueur assidu (5 parties)",
         "Scoreur (100 points)",
         "Champion (500 points)",
-        "Spécialiste Devine le nombre (5 parties)"
+        "Spécialiste Devine le nombre (5 parties)",
+        "Maître du jeu (1000 points)"
     ]
 }
